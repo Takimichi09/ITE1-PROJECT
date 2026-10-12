@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 import { supabase } from '../lib/supabase'
 import { checkoutDetails, MAX_QUANTITY, sanitizeBag, validateCustomer } from '../lib/shop'
 import { readStorage, writeStorage } from '../lib/storage'
+import { withContactDetails } from '../data/shopDetails'
 
 const ShopContext = createContext(null)
 const BAG_KEY = 'dailycup:bag:v1'
@@ -17,7 +18,7 @@ export function ShopProvider({ children }) {
   const [subcategories, setSubcategories] = useState([])
   const [catalogLoading, setCatalogLoading] = useState(Boolean(supabase))
   const [catalogError, setCatalogError] = useState('')
-  const [storeSettings, setStoreSettings] = useState(null)
+  const [storeSettings, setStoreSettings] = useState(() => withContactDetails(null))
   const [galleryImages, setGalleryImages] = useState([])
   const [contentError, setContentError] = useState('')
   const [feedback, setFeedback] = useState([])
@@ -77,11 +78,10 @@ export function ShopProvider({ children }) {
       supabase.from('gallery_images').select('*').eq('published', true).order('sort_order'),
       supabase.from('order_feedback').select('rating,comment,created_at').order('created_at', { ascending: false }).limit(6),
     ])
-    if (settingsResult.error || galleryResult.error || feedbackResult.error) { setContentError('Shop details are unavailable right now.'); return }
-    setStoreSettings(settingsResult.data)
-    setGalleryImages(galleryResult.data)
-    setFeedback(feedbackResult.data)
-    setContentError('')
+    if (!settingsResult.error) setStoreSettings(withContactDetails(settingsResult.data))
+    if (!galleryResult.error) setGalleryImages(galleryResult.data)
+    if (!feedbackResult.error) setFeedback(feedbackResult.data)
+    setContentError(settingsResult.error || galleryResult.error || feedbackResult.error ? 'Some shop content is unavailable right now.' : '')
   }, [])
   useEffect(() => {
     const refresh = () => { void reloadCatalog(); void reloadPublicContent() }

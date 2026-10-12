@@ -1,6 +1,11 @@
 export const SHOP_NAME = 'Daily Cup'
+export const defaultGalleryPhoto = {
+  id: 'coffee-friends',
+  image_url: '/gallery-coffee-friends.png',
+  caption: 'Coffee shared with friends',
+}
 export const photos = {
-  hero: 'https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=1400&q=85',
+  hero: '/customer-hero-coffee.png',
   cafe: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=85',
   latte: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?auto=format&fit=crop&w=640&q=80',
   cappuccino: 'https://images.unsplash.com/photo-1534778101976-62847782c213?auto=format&fit=crop&w=640&q=80',

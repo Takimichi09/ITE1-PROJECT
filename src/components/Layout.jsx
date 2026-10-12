@@ -9,7 +9,7 @@ import { calculateTotals, checkoutDestination, money } from '../lib/shop'
 export function Brand() {
   const { storeSettings } = useShop()
   const name = storeSettings?.shop_name || SHOP_NAME
-  return <Link className="brand" to="/" aria-label={`${name} home`}><span className="brand-icon"><Coffee size={25} strokeWidth={1.7} /></span><span>{name}<i>COFFEE & GOOD COMPANY</i></span></Link>
+  return <Link className="brand" to="/" aria-label={`${name} home`}><img className="brand-logo" src="/cafe-de-mell-logo.png" alt="Cafe de Mell logo" width="960" height="960" /><span>{name}<i>COFFEE & GOOD COMPANY</i></span></Link>
 }
 export default function Layout({ children }) {
   const { user, profile, bagCount, lines, notice, signOut, setNotice, setQuantity, storeSettings, catalogLoading, catalogError } = useShop()

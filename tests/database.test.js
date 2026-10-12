@@ -174,3 +174,23 @@ test('admins manage category hierarchy while customers can only read it', async 
   await db.query("delete from public.products where id='iced-latte'")
   assert.ok((await db.query("select * from public.order_items where name='Test Latte' and product_id is null")).rows.length > 0)
 })
+
+test('admin shop details are readable by customers and visitors', async () => {
+  await asUser(admin)
+  const settings = { shop_name: 'Updated Cafe', announcement: 'New hours', about_text: 'Our updated story', address: '12 Cafe Street', hours: '8 AM–8 PM', phone: '09171234567', email: 'cafe@example.com', hero_image: 'https://example.com/hero.jpg', cafe_image: 'https://example.com/shop.jpg', gcash_qr_image: 'https://example.com/qr.png' }
+  const fields = Object.keys(settings)
+  await db.query(`update public.store_settings set ${fields.map((field, index) => `${field}=$${index + 1}`).join(',')} where id=true`, Object.values(settings))
+  for (const [user, role] of [[alice, 'authenticated'], [null, 'anon']]) {
+    await asUser(user, role)
+    const { rows } = await db.query(`select ${fields.join(',')} from public.store_settings where id=true`)
+    assert.deepEqual(rows[0], settings)
+  }
+})
+
+test('published gallery uploads are visible to visitors while hidden images stay private', async () => {
+  await asUser(admin)
+  await db.query("insert into public.gallery_images(image_url,caption,published,sort_order) values ('https://example.com/gallery-one.jpg','First photo',true,1), ('https://example.com/gallery-two.png','Second photo',true,2), ('https://example.com/hidden.jpg','Hidden photo',false,3)")
+  await asUser(null, 'anon')
+  const { rows } = await db.query('select caption from public.gallery_images order by sort_order')
+  assert.deepEqual(rows.map((row) => row.caption), ['First photo', 'Second photo'])
+})
