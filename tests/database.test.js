@@ -233,3 +233,12 @@ test('bread and pastries menu seeds seven items at the listed prices', async () 
   await asUser(alice)
   assert.equal(Number((await order(pickup, [{ product_id: 'pastry-brownies', quantity: 1 }])).total), 140)
 })
+
+test('combined menu script safely updates coffee and pastries together', async () => {
+  await db.exec('reset role')
+  const seed = await readFile(new URL('../supabase/coffee-and-pastries-menu.sql', import.meta.url), 'utf8')
+  await db.exec(seed)
+  await db.exec(seed)
+  const { rows } = await db.query("select category, count(*)::int as total from public.products where id like 'coffee-%' or id like 'pastry-%' group by category order by category")
+  assert.deepEqual(rows, [{ category: 'Drinks', total: 9 }, { category: 'Foods', total: 7 }])
+})

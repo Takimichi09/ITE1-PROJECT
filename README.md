@@ -28,7 +28,11 @@ The project URL and publishable key cannot install tables or change Auth setting
    ```
 
    Confirm that exactly one row was updated, then sign in at `/admin/login`. The signup trigger always starts every profile as a `customer`; only trusted SQL can promote an administrator.
-4. In `/admin`, add categories and menu items, or run the coffee menu script below. Add the shop address, hours, contact details, story, and gallery photos. The base schema does not seed products or gallery images. Admins can upload product and gallery photos.
+4. In `/admin`, add categories and menu items, or run the combined menu script below. Add the shop address, hours, contact details, story, and gallery photos. The base schema does not seed products or gallery images. Admins can upload product and gallery photos.
+
+## Coffee and pastries menu
+
+Run [`supabase/coffee-and-pastries-menu.sql`](supabase/coffee-and-pastries-menu.sql) in the Supabase SQL Editor to publish both the coffee drinks and pastries in one step. The script is safe to rerun, including when the coffee drinks already exist. The older individual scripts remain available if you only need to update one section.
 
 ## Coffee-based menu
 
