@@ -194,3 +194,26 @@ test('published gallery uploads are visible to visitors while hidden images stay
   const { rows } = await db.query('select caption from public.gallery_images order by sort_order')
   assert.deepEqual(rows.map((row) => row.caption), ['First photo', 'Second photo'])
 })
+
+test('coffee menu seeds nine drinks with hot/cold and size prices', async () => {
+  await db.exec('reset role')
+  const seed = await readFile(new URL('../supabase/coffee-based-menu.sql', import.meta.url), 'utf8')
+  await db.exec(seed)
+  await db.exec(seed)
+  const { rows } = await db.query("select name, price, category, image, customizations from public.products where id like 'coffee-%' order by sort_order")
+  assert.deepEqual(rows.map(({ name }) => name), [
+    'Cappuccino', 'Cafe Latte', 'White Chocolate Latte', 'Butterscotch Latte',
+    'Salted Caramel Latte', 'Caramel Latte', 'Chocolate Latte', 'Hazelnut Latte',
+    'French Vanilla Latte',
+  ])
+  for (const product of rows) {
+    assert.equal(product.category, 'Drinks')
+    assert.equal(Number(product.price), 130)
+    assert.deepEqual(product.customizations.map(({ name, required }) => [name, required]), [['Temperature', true], ['Size', true]])
+  }
+  assert.equal(rows.at(-1).image, '/menu/french-vanilla-latte.png')
+  await asUser(alice)
+  const item = (temperature, size) => [{ product_id: 'coffee-cappuccino', quantity: 1, selections: { temperature: [temperature], size: [size] } }]
+  assert.equal(Number((await order(pickup, item('hot', 'medium-16oz'))).total), 130)
+  assert.equal(Number((await order(pickup, item('cold', 'large-22oz'))).total), 140)
+})

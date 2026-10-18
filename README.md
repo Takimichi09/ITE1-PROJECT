@@ -28,7 +28,13 @@ The project URL and publishable key cannot install tables or change Auth setting
    ```
 
    Confirm that exactly one row was updated, then sign in at `/admin/login`. The signup trigger always starts every profile as a `customer`; only trusted SQL can promote an administrator.
-4. In `/admin`, add a category and real menu items. Add the shop address, hours, contact details, story, and gallery photos. No products or gallery images are seeded. Product images and gallery images currently use HTTPS image URLs; there is no file upload yet.
+4. In `/admin`, add categories and menu items, or run the coffee menu script below. Add the shop address, hours, contact details, story, and gallery photos. The base schema does not seed products or gallery images. Admins can upload product and gallery photos.
+
+## Coffee-based menu
+
+After the schema is installed, run [`supabase/coffee-based-menu.sql`](supabase/coffee-based-menu.sql) in the Supabase SQL Editor to publish the nine coffee-based drinks. The script is safe to rerun and creates **Drinks → Coffee** if needed. Each drink requires Hot or Cold and a size: Medium 16 oz costs ₱130; Large 22 oz costs ₱140. Seven provided photos are served from `public/menu/`. Caramel and Chocolate Latte use the menu's coffee icon until photos are supplied. The products are stored in Supabase so checkout uses the same prices shown on the storefront.
+
+The image paths in the script refer to files served by this site. Deploy the updated site files as well as running the SQL. If you ran an older version of the script, rerun the latest version to update existing product image paths.
 
 Customers register with a username, password, full name, and Philippine mobile number. Supabase Auth requires an email or phone identifier for password accounts, so the app maps each lowercase username to an internal address under `users.dailycup.ph`. Customers never enter an email or receive an email code. The database stores the real username in `public.profiles` and keeps it unique. Passwords are managed by Supabase Auth, not stored in the application database.
 

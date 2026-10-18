@@ -25,6 +25,7 @@ export function ShopProvider({ children }) {
   const [bag, setBag] = useState(() => sanitizeBag(readStorage(BAG_KEY, [])))
   const [notice, setNotice] = useState('')
   const authVersion = useRef(0)
+  const authUserId = useRef(null)
 
   useEffect(() => {
     if (!supabase) return undefined
@@ -32,6 +33,7 @@ export function ShopProvider({ children }) {
     const hydrate = async (session) => {
       const version = ++authVersion.current
       if (!active) return
+      authUserId.current = session?.user?.id || null
       setUser(session?.user || null)
       setProfile(null)
       setAuthError('')
@@ -48,8 +50,15 @@ export function ShopProvider({ children }) {
       }
     }
     // Schedule database work outside the synchronous auth callback.
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      window.setTimeout(() => { if (active) void hydrate(session) }, 0)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      window.setTimeout(() => {
+        if (!active) return
+        if (event === 'INITIAL_SESSION' || (session?.user?.id || null) !== authUserId.current) {
+          void hydrate(session)
+        } else if (event === 'USER_UPDATED' && session?.user) {
+          setUser(session.user)
+        }
+      }, 0)
     })
     return () => { active = false; subscription.unsubscribe() }
   }, [])
@@ -86,8 +95,9 @@ export function ShopProvider({ children }) {
   useEffect(() => {
     const refresh = () => { void reloadCatalog(); void reloadPublicContent() }
     const timer = window.setTimeout(refresh, 0)
-    const interval = window.setInterval(() => { if (document.visibilityState === 'visible') refresh() }, 30000)
-    const onVisible = () => { if (document.visibilityState === 'visible') refresh() }
+    const shouldRefresh = () => document.visibilityState === 'visible' && !window.location.pathname.startsWith('/admin')
+    const interval = window.setInterval(() => { if (shouldRefresh()) refresh() }, 30000)
+    const onVisible = () => { if (shouldRefresh()) refresh() }
     document.addEventListener('visibilitychange', onVisible)
     return () => { window.clearTimeout(timer); window.clearInterval(interval); document.removeEventListener('visibilitychange', onVisible) }
   }, [reloadCatalog, reloadPublicContent])
@@ -123,7 +133,7 @@ export function ShopProvider({ children }) {
   async function signOut() {
     if (!supabase) throw new Error('The shop is not connected to Supabase.')
     const { error } = await supabase.auth.signOut(); if (error) throw error
-    ++authVersion.current; setUser(null); setProfile(null); setAuthError('')
+    ++authVersion.current; authUserId.current = null; setUser(null); setProfile(null); setAuthError(''); setAuthLoading(false)
   }
   async function saveProfile(values) {
     if (!user) throw new Error('Please sign in again.')
