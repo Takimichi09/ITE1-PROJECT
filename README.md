@@ -36,6 +36,10 @@ After the schema is installed, run [`supabase/coffee-based-menu.sql`](supabase/c
 
 The image paths in the script refer to files served by this site. Deploy the updated site files as well as running the SQL. If you ran an older version of the script, rerun the latest version to update existing product image paths.
 
+## Bread and pastries menu
+
+Run [`supabase/bread-and-pastries-menu.sql`](supabase/bread-and-pastries-menu.sql) in the Supabase SQL Editor to publish Ensay Mada (₱100), Croissant (₱120), Banana Loaf (₱120), Brownies (₱140), Muffin (₱110), Cinnamon Roll (₱120), and Donuts (₱180) under **Foods → Pastry**. The script is safe to rerun. Four supplied photos are served from `public/menu/`; Ensay Mada, Muffin, and Donuts use the menu placeholder until photos are supplied. Deploy the site files so the image paths resolve.
+
 Customers register with a username, password, full name, and Philippine mobile number. Supabase Auth requires an email or phone identifier for password accounts, so the app maps each lowercase username to an internal address under `users.dailycup.ph`. Customers never enter an email or receive an email code. The database stores the real username in `public.profiles` and keeps it unique. Passwords are managed by Supabase Auth, not stored in the application database.
 
 **Account recovery:** Without a real email address or phone verification, customers cannot use Supabase's self-service password reset. A shop administrator would need to verify the customer's identity and handle recovery through a trusted admin process. Usernames are not editable in the profile UI.

@@ -217,3 +217,19 @@ test('coffee menu seeds nine drinks with hot/cold and size prices', async () => 
   assert.equal(Number((await order(pickup, item('hot', 'medium-16oz'))).total), 130)
   assert.equal(Number((await order(pickup, item('cold', 'large-22oz'))).total), 140)
 })
+
+test('bread and pastries menu seeds seven items at the listed prices', async () => {
+  await db.exec('reset role')
+  const seed = await readFile(new URL('../supabase/bread-and-pastries-menu.sql', import.meta.url), 'utf8')
+  await db.exec(seed)
+  await db.exec(seed)
+  const { rows } = await db.query("select name, price, category, image from public.products where id like 'pastry-%' order by sort_order")
+  assert.deepEqual(rows.map(({ name, price }) => [name, Number(price)]), [
+    ['Ensay Mada', 100], ['Croissant', 120], ['Banana Loaf', 120],
+    ['Brownies', 140], ['Muffin', 110], ['Cinnamon Roll', 120], ['Donuts', 180],
+  ])
+  assert.ok(rows.every(({ category }) => category === 'Foods'))
+  assert.equal(rows.find(({ name }) => name === 'Croissant').image, '/menu/croissant.jpg')
+  await asUser(alice)
+  assert.equal(Number((await order(pickup, [{ product_id: 'pastry-brownies', quantity: 1 }])).total), 140)
+})
