@@ -212,6 +212,7 @@ test('coffee menu seeds nine drinks with hot/cold and size prices', async () => 
     assert.deepEqual(product.customizations.map(({ name, required }) => [name, required]), [['Temperature', true], ['Size', true]])
   }
   assert.equal(rows.at(-1).image, '/menu/french-vanilla-latte.png')
+  assert.ok(rows.every(({ image }) => image.startsWith('/menu/')))
   await asUser(alice)
   const item = (temperature, size) => [{ product_id: 'coffee-cappuccino', quantity: 1, selections: { temperature: [temperature], size: [size] } }]
   assert.equal(Number((await order(pickup, item('hot', 'medium-16oz'))).total), 130)

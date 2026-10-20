@@ -36,7 +36,7 @@ Run [`supabase/coffee-and-pastries-menu.sql`](supabase/coffee-and-pastries-menu.
 
 ## Coffee-based menu
 
-After the schema is installed, run [`supabase/coffee-based-menu.sql`](supabase/coffee-based-menu.sql) in the Supabase SQL Editor to publish the nine coffee-based drinks. The script is safe to rerun and creates **Drinks → Coffee** if needed. Each drink requires Hot or Cold and a size: Medium 16 oz costs ₱130; Large 22 oz costs ₱140. Seven provided photos are served from `public/menu/`. Caramel and Chocolate Latte use the menu's coffee icon until photos are supplied. The products are stored in Supabase so checkout uses the same prices shown on the storefront.
+After the schema is installed, run [`supabase/coffee-based-menu.sql`](supabase/coffee-based-menu.sql) in the Supabase SQL Editor to publish the nine coffee-based drinks. The script is safe to rerun and creates **Drinks → Coffee** if needed. Each drink requires Hot or Cold and a size: Medium 16 oz costs ₱130; Large 22 oz costs ₱140. All nine photos are served from `public/menu/`. The products are stored in Supabase so checkout uses the same prices shown on the storefront.
 
 The image paths in the script refer to files served by this site. Deploy the updated site files as well as running the SQL. If you ran an older version of the script, rerun the latest version to update existing product image paths.
 

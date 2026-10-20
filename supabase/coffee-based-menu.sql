@@ -17,8 +17,8 @@ with menu (id, name, image, sort_order) as (
     ('coffee-white-chocolate-latte', 'White Chocolate Latte', '/menu/white-chocolate-latte.jpg', 30),
     ('coffee-butterscotch-latte', 'Butterscotch Latte', '/menu/butterscotch-latte.jpg', 40),
     ('coffee-salted-caramel-latte', 'Salted Caramel Latte', '/menu/salted-caramel-latte.jpg', 50),
-    ('coffee-caramel-latte', 'Caramel Latte', '', 60),
-    ('coffee-chocolate-latte', 'Chocolate Latte', '', 70),
+    ('coffee-caramel-latte', 'Caramel Latte', '/menu/caramel-latte.jpg', 60),
+    ('coffee-chocolate-latte', 'Chocolate Latte', '/menu/chocolate-latte.jpg', 70),
     ('coffee-hazelnut-latte', 'Hazelnut Latte', '/menu/hazelnut-latte.jpg', 80),
     ('coffee-french-vanilla-latte', 'French Vanilla Latte', '/menu/french-vanilla-latte.png', 90)
 )
