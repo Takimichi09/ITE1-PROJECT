@@ -12,13 +12,13 @@ on conflict (category_name, name) do nothing;
 
 with menu (id, name, price, image, sort_order) as (
   values
-    ('pastry-ensay-mada', 'Ensay Mada', 100, '', 10),
+    ('pastry-ensay-mada', 'Ensay Mada', 100, '/menu/ensay-mada.jpg', 10),
     ('pastry-croissant', 'Croissant', 120, '/menu/croissant.jpg', 20),
     ('pastry-banana-loaf', 'Banana Loaf', 120, '/menu/banana-loaf.jpg', 30),
     ('pastry-brownies', 'Brownies', 140, '/menu/brownies.jpg', 40),
-    ('pastry-muffin', 'Muffin', 110, '', 50),
+    ('pastry-muffin', 'Muffin', 110, '/menu/muffin.jpg', 50),
     ('pastry-cinnamon-roll', 'Cinnamon Roll', 120, '/menu/cinnamon-roll.jpg', 60),
-    ('pastry-donuts', 'Donuts', 180, '', 70)
+    ('pastry-donuts', 'Donuts', 180, '/menu/donuts.jpg', 70)
 )
 insert into public.products
   (id, name, category, subcategory_id, description, price, image, customizations, available, sort_order)
