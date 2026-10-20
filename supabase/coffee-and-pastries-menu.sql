@@ -103,3 +103,9 @@ on conflict (id) do update set
   sort_order = excluded.sort_order;
 
 commit;
+
+-- The SQL Editor should show all 16 published items below after a successful run.
+select name, category, price, image, available
+from public.products
+where id like 'coffee-%' or id like 'pastry-%'
+order by category, sort_order;

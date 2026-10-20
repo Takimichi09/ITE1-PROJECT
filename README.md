@@ -32,7 +32,7 @@ The project URL and publishable key cannot install tables or change Auth setting
 
 ## Coffee and pastries menu
 
-Run [`supabase/coffee-and-pastries-menu.sql`](supabase/coffee-and-pastries-menu.sql) in the Supabase SQL Editor to publish both the coffee drinks and pastries in one step. The script is safe to rerun, including when the coffee drinks already exist. The older individual scripts remain available if you only need to update one section.
+Run the entire latest [`supabase/coffee-and-pastries-menu.sql`](supabase/coffee-and-pastries-menu.sql) in the SQL Editor of the Supabase project configured in `.env`. It publishes both the coffee drinks and pastries in one step and is safe to rerun. A successful run displays 16 rows with their image paths; if the rows do not appear, check the SQL Editor error before refreshing the site. The older individual scripts remain available if you only need to update one section.
 
 ## Coffee-based menu
 
